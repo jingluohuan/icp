@@ -10,6 +10,3 @@
    - 新建KV命名空间：LAOZAI_ICP_SITES
    - Pages设置 -> 函数 -> KV绑定，变量名SITES_KV绑定到该命名空间
 4. 重新部署即可
-
-## 默认管理员密码：laozai2026
-修改密码请编辑 functions/api/admin/config.js
