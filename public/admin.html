@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 牢ICP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#38bdf8', secondary: '#f472b6' } } } }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme { background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%); }
+            .text-gradient { background: linear-gradient(90deg, #38bdf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+            .card-shadow { box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15); }
+            .bg-grid { background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <a href="/" class="text-xl font-bold text-gradient">牢ICP - 管理后台</a>
+                </div>
+                <a href="/" class="text-slate-600 hover:text-primary"><i class="fa fa-home mr-1"></i>返回首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 max-w-7xl mx-auto px-4">
+        <!-- 登录区 -->
+        <div id="loginSection" class="max-w-md mx-auto">
+            <div class="glass rounded-2xl p-8 card-shadow">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center mx-auto mb-3 text-2xl">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <h2 class="text-xl font-bold">管理员登录</h2>
+                    <p class="text-sm text-slate-500 mt-1">请输入管理员密码进入后台</p>
+                </div>
+                <div class="space-y-4">
+                    <input type="password" id="passwordInput" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" placeholder="管理员密码">
+                    <button id="loginBtn" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-medium hover:shadow-lg transition-all">登录</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 管理面板 -->
+        <div id="adminPanel" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="glass rounded-xl p-5 card-shadow">
+                    <div class="text-3xl font-bold text-gradient" id="statTotal">0</div>
+                    <div class="text-slate-500 text-sm mt-1">总站点数</div>
+                </div>
+                <div class="glass rounded-xl p-5 card-shadow">
+                    <div class="text-3xl font-bold text-green-500" id="statApproved">0</div>
+                    <div class="text-slate-500 text-sm mt-1">已通过</div>
+                </div>
+                <div class="glass rounded-xl p-5 card-shadow">
+                    <div class="text-3xl font-bold text-yellow-500" id="statPending">0</div>
+                    <div class="text-slate-500 text-sm mt-1">待审核</div>
+                </div>
+                <div class="glass rounded-xl p-5 card-shadow">
+                    <div class="text-3xl font-bold text-red-400" id="statRejected">0</div>
+                    <div class="text-slate-500 text-sm mt-1">已拒绝</div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mb-6 flex-wrap">
+                <button class="tabBtn px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-medium" data-status="pending">待审核</button>
+                <button class="tabBtn px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 font-medium" data-status="approved">已通过</button>
+                <button class="tabBtn px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 font-medium" data-status="rejected">已拒绝</button>
+                <button class="tabBtn px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 font-medium" data-status="all">全部</button>
+                <button id="refreshBtn" class="ml-auto px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 hover:text-primary transition-colors"><i class="fa fa-refresh mr-1"></i>刷新</button>
+                <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-white text-red-400 border border-red-200 hover:bg-red-50 transition-colors"><i class="fa fa-sign-out mr-1"></i>退出登录</button>
+            </div>
+
+            <div class="glass rounded-2xl overflow-hidden card-shadow">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-primary/10 bg-white/50">
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">ID</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">站点信息</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 hidden md:table-cell">站长/邮箱</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 hidden lg:table-cell">备案号</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500 hidden md:table-cell">提交日期</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">状态</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-slate-500">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sitesTableBody">
+                            <tr><td colspan="7" class="px-4 py-8 text-center text-slate-400">加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass border-t py-8 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            © 2026 牢ICP 管理后台
+        </div>
+    </footer>
+
+    <script>
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            const size = Math.random() * 6 + 3;
+            p.className = `absolute rounded-full ${Math.random() > 0.5 ? 'bg-primary/20' : 'bg-secondary/20'}`;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation:float ${Math.random()*10+10}s linear infinite;animation-delay:${Math.random()*5}s`;
+            document.getElementById('particles').appendChild(p);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes float {0%{transform:translateY(0) translateX(0);opacity:.3}50%{transform:translateY(-20px) translateX(10px);opacity:.6}100%{transform:translateY(0) translateX(0);opacity:.3}}`;
+        document.head.appendChild(style);
+
+        let adminPassword = localStorage.getItem('laozai_admin_pwd') || '';
+        let allSites = [];
+        let currentTab = 'pending';
+
+        // 登录
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const pwd = document.getElementById('passwordInput').value.trim();
+            if (!pwd) { alert('请输入密码'); return; }
+            adminPassword = pwd;
+            loadSites();
+        });
+        document.getElementById('passwordInput').addEventListener('keydown', (e) => e.key === 'Enter' && document.getElementById('loginBtn').click());
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('laozai_admin_pwd');
+            adminPassword = '';
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('passwordInput').value = '';
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', loadSites);
+
+        // tab切换
+        document.querySelectorAll('.tabBtn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tabBtn').forEach(b => {
+                    b.className = 'tabBtn px-4 py-2 rounded-lg bg-white text-slate-600 border border-slate-200 font-medium';
+                });
+                btn.className = 'tabBtn px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-medium';
+                currentTab = btn.dataset.status;
+                renderTable();
+            });
+        });
+
+        async function loadSites() {
+            try {
+                const res = await fetch(`/api/admin?password=${encodeURIComponent(adminPassword)}`);
+                const data = await res.json();
+                if (data.success) {
+                    allSites = data.data;
+                    localStorage.setItem('laozai_admin_pwd', adminPassword);
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    
+                    // 更新统计
+                    document.getElementById('statTotal').textContent = allSites.length;
+                    document.getElementById('statApproved').textContent = allSites.filter(s => s.status === 'approved').length;
+                    document.getElementById('statPending').textContent = allSites.filter(s => s.status === 'pending').length;
+                    document.getElementById('statRejected').textContent = allSites.filter(s => s.status === 'rejected').length;
+                    
+                    renderTable();
+                } else {
+                    alert(data.message || '密码错误');
+                    localStorage.removeItem('laozai_admin_pwd');
+                }
+            } catch (e) {
+                alert('加载失败，请检查密码是否正确');
+            }
+        }
+
+        function getStatusBadge(status) {
+            if (status === 'approved') return '<span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-600">已通过</span>';
+            if (status === 'pending') return '<span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-600">待审核</span>';
+            if (status === 'rejected') return '<span class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-500">已拒绝</span>';
+            return status;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('sitesTableBody');
+            let sites = [...allSites].reverse();
+            if (currentTab !== 'all') {
+                sites = sites.filter(s => s.status === currentTab);
+            }
+            if (sites.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-12 text-center text-slate-400">暂无数据</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = sites.map(site => `
+                <tr class="border-b border-primary/5 hover:bg-white/50">
+                    <td class="px-4 py-3">${site.id}</td>
+                    <td class="px-4 py-3">
+                        <div class="font-medium">${site.name}</div>
+                        <a href="${site.url}" target="_blank" class="text-xs text-primary hover:underline block truncate max-w-[200px]">${site.url}</a>
+                        <div class="text-xs text-slate-400 mt-1 line-clamp-1">${site.description || '暂无简介'}</div>
+                    </td>
+                    <td class="px-4 py-3 hidden md:table-cell">
+                        <div>${site.webmaster}</div>
+                        <div class="text-xs text-slate-400">${site.email}</div>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-slate-500 hidden lg:table-cell">${site.icp}</td>
+                    <td class="px-4 py-3 text-xs text-slate-500 hidden md:table-cell">${site.join_date}</td>
+                    <td class="px-4 py-3">${getStatusBadge(site.status)}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex gap-1 flex-wrap">
+                            ${site.status !== 'approved' ? `<button onclick="updateStatus(${site.id}, 'approved')" class="px-2 py-1 text-xs rounded bg-green-100 text-green-600 hover:bg-green-200 transition-colors">通过</button>` : ''}
+                            ${site.status !== 'rejected' ? `<button onclick="updateStatus(${site.id}, 'rejected')" class="px-2 py-1 text-xs rounded bg-red-100 text-red-500 hover:bg-red-200 transition-colors">拒绝</button>` : ''}
+                            ${site.status !== 'pending' ? `<button onclick="updateStatus(${site.id}, 'pending')" class="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-600 hover:bg-yellow-200 transition-colors">重置待审</button>` : ''}
+                            <button onclick="deleteSite(${site.id})" class="px-2 py-1 text-xs rounded bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">删除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.updateStatus = async (id, status) => {
+            const site = allSites.find(s => s.id === id);
+            if (!site) return;
+            site.status = status;
+            await saveSites();
+        };
+
+        window.deleteSite = async (id) => {
+            if (!confirm('确定要删除这个站点吗？此操作不可恢复！')) return;
+            allSites = allSites.filter(s => s.id !== id);
+            await saveSites();
+        };
+
+        async function saveSites() {
+            try {
+                const res = await fetch('/api/admin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: adminPassword, sites: allSites })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // 更新统计
+                    document.getElementById('statTotal').textContent = allSites.length;
+                    document.getElementById('statApproved').textContent = allSites.filter(s => s.status === 'approved').length;
+                    document.getElementById('statPending').textContent = allSites.filter(s => s.status === 'pending').length;
+                    document.getElementById('statRejected').textContent = allSites.filter(s => s.status === 'rejected').length;
+                    renderTable();
+                } else {
+                    alert('操作失败：' + data.message);
+                    loadSites();
+                }
+            } catch (e) {
+                alert('网络错误，操作失败');
+                loadSites();
+            }
+        }
+
+        // 如果本地存了密码自动登录
+        if (adminPassword) {
+            document.getElementById('passwordInput').value = adminPassword;
+            loadSites();
+        }
+    </script>
+</body>
+</html>

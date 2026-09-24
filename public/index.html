@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>牢ICP - 非官方网站备案查询系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#38bdf8',
+                        secondary: '#f472b6',
+                        light: '#f0f9ff',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme {
+                background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%);
+            }
+            .text-gradient {
+                background: linear-gradient(90deg, #38bdf8, #f472b6);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .glass {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.6);
+            }
+            .card-shadow {
+                box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15);
+            }
+            .card-shadow-pink {
+                box-shadow: 0 8px 32px rgba(244, 114, 182, 0.15);
+            }
+            .bg-grid {
+                background-image: 
+                    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+                background-size: 24px 24px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <!-- 粒子背景容器 -->
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <!-- 装饰光晕 -->
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-gradient">牢ICP</span>
+                    <span class="text-xs text-slate-500 ml-2 hidden sm:inline">laozai-icp</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="nav-link text-primary font-medium border-b-2 border-primary/0 hover:border-primary transition-all py-1">首页</a>
+                    <a href="/apply.html" class="nav-link text-slate-600 font-medium border-b-2 border-primary/0 hover:border-primary transition-all py-1">申请备案</a>
+                    <a href="/query.html" class="nav-link text-slate-600 font-medium border-b-2 border-primary/0 hover:border-primary transition-all py-1">备案查询</a>
+                    <a href="/announcement.html" class="nav-link text-slate-600 font-medium border-b-2 border-primary/0 hover:border-primary transition-all py-1">公告中心</a>
+                    <a href="/jump.html" class="nav-link text-slate-600 font-medium border-b-2 border-primary/0 hover:border-primary transition-all py-1">站点迁跃</a>
+                    <a href="/admin.html" class="nav-link text-slate-600 font-medium border-b-2 border-primary/0 hover:border-secondary transition-all py-1"><i class="fa fa-cog mr-1"></i>管理</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menuBtn" class="text-slate-700 hover:text-primary focus:outline-none">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-white/40">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="/" class="block px-3 py-2 rounded-md text-base font-medium text-primary">首页</a>
+                <a href="/apply.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-primary">申请备案</a>
+                <a href="/query.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-primary">备案查询</a>
+                <a href="/announcement.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-primary">公告中心</a>
+                <a href="/jump.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-primary">站点迁跃</a>
+                <a href="/admin.html" class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 hover:text-secondary"><i class="fa fa-cog mr-1"></i>管理后台</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="pt-24 pb-16">
+        <!-- Hero区域 -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <div class="glass rounded-3xl p-8 md:p-12 card-shadow relative overflow-hidden">
+                <div class="relative z-10">
+                    <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight mb-4">
+                        <span class="text-gradient">非官方备案系统</span>
+                    </h1>
+                    <p class="text-lg text-slate-600 mb-8 max-w-2xl">
+                        牢ICP是面向个人站长的非官方网站联盟备案系统，收录优质个人博客与独立站点，
+                        为草根站长提供一个互相串门、交换友链的温暖聚集地。
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/apply.html" class="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-full font-medium hover:shadow-lg hover:-translate-y-1 transition-all">
+                            <i class="fa fa-paper-plane mr-2"></i>申请加入
+                        </a>
+                        <a href="/query.html" class="px-6 py-3 bg-white text-primary border border-primary rounded-full font-medium hover:bg-primary/5 transition-all">
+                            <i class="fa fa-search mr-2"></i>查询备案
+                        </a>
+                        <button id="randomBtn" class="px-6 py-3 bg-white text-secondary border border-secondary rounded-full font-medium hover:bg-secondary/5 transition-all">
+                            <i class="fa fa-random mr-2"></i>随便逛逛
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl"></div>
+            </div>
+        </section>
+
+        <!-- 统计数据 -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass rounded-2xl p-6 card-shadow text-center hover:-translate-y-1 transition-all">
+                    <div class="text-4xl font-bold text-gradient counter" data-target="0" id="approvedCount">0</div>
+                    <div class="text-slate-500 mt-2"><i class="fa fa-check-circle text-primary mr-1"></i>已备案站点</div>
+                </div>
+                <div class="glass rounded-2xl p-6 card-shadow text-center hover:-translate-y-1 transition-all">
+                    <div class="text-4xl font-bold text-gradient counter" data-target="0" id="pendingCount">0</div>
+                    <div class="text-slate-500 mt-2"><i class="fa fa-clock-o text-secondary mr-1"></i>待审核站点</div>
+                </div>
+                <div class="glass rounded-2xl p-6 card-shadow text-center hover:-translate-y-1 transition-all">
+                    <div class="text-4xl font-bold text-gradient counter" data-target="0" id="visitsCount">0</div>
+                    <div class="text-slate-500 mt-2"><i class="fa fa-eye text-primary mr-1"></i>总访问量</div>
+                </div>
+                <div class="glass rounded-2xl p-6 card-shadow text-center hover:-translate-y-1 transition-all">
+                    <div class="text-4xl font-bold text-gradient counter" data-target="0" id="todayCount">0</div>
+                    <div class="text-slate-500 mt-2"><i class="fa fa-calendar-o text-secondary mr-1"></i>今日新增</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联盟站点 -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">
+                    <span class="text-gradient">联盟站点</span>
+                </h2>
+                <button id="refreshSitesBtn" class="text-primary hover:text-secondary transition-colors">
+                    <i class="fa fa-refresh mr-1"></i>换一批
+                </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="sitesContainer">
+                <div class="glass rounded-2xl p-6 card-shadow flex items-center justify-center">
+                    <div class="text-center text-slate-400 py-8">
+                        <i class="fa fa-spinner fa-spin text-3xl mb-3"></i>
+                        <p>正在加载站点数据...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <a href="/jump.html" class="inline-block px-6 py-2 text-primary hover:text-secondary transition-colors">
+                    查看全部站点 <i class="fa fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 活跃排行 -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <h2 class="text-2xl font-bold mb-8">
+                <span class="text-gradient">活跃排行榜</span>
+            </h2>
+            <div class="glass rounded-2xl overflow-hidden card-shadow">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-primary/10 bg-white/50">
+                                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">排名</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">站点</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500 hidden md:table-cell">站长</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500 hidden md:table-cell">备案号</th>
+                                <th class="px-6 py-4 text-left text-sm font-medium text-slate-500">访问量</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankContainer">
+                            <tr>
+                                <td colspan="5" class="px-6 py-8 text-center text-slate-400">
+                                    <i class="fa fa-spinner fa-spin mr-2"></i>加载中...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 最新公告 -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">
+                    <span class="text-gradient">最新公告</span>
+                </h2>
+                <a href="/announcement.html" class="text-primary hover:text-secondary transition-colors">
+                    查看全部 <i class="fa fa-angle-right ml-1"></i>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 card-shadow hover:-translate-y-1 transition-all">
+                    <div class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4">官方公告</div>
+                    <h3 class="font-bold text-lg mb-2">牢ICP备案系统正式上线啦！</h3>
+                    <p class="text-slate-600 text-sm mb-4">欢迎各位个人站长提交申请加入我们的联盟，共同建设个人网站生态~</p>
+                    <div class="text-slate-400 text-xs">2026-09-24</div>
+                </div>
+                <div class="glass rounded-2xl p-6 card-shadow-pink hover:-translate-y-1 transition-all">
+                    <div class="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-medium mb-4">审核规范</div>
+                    <h3 class="font-bold text-lg mb-2">备案审核标准说明</h3>
+                    <p class="text-slate-600 text-sm mb-4">站点需要为个人博客/独立站点，内容合法合规，无广告弹窗，正常可访问即可通过审核。</p>
+                    <div class="text-slate-400 text-xs">2026-09-24</div>
+                </div>
+                <div class="glass rounded-2xl p-6 card-shadow hover:-translate-y-1 transition-all">
+                    <div class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-4">功能更新</div>
+                    <h3 class="font-bold text-lg mb-2">后台审核功能上线</h3>
+                    <p class="text-slate-600 text-sm mb-4">现在可以在管理后台审核站点申请，修改审核状态，管理所有提交的站点啦！</p>
+                    <div class="text-slate-400 text-xs">2026-09-24</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center opacity-0 invisible transition-all shadow-lg hover:shadow-xl z-50">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- 页脚 -->
+    <footer class="glass border-t border-white/40 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fa fa-shield text-primary text-xl mr-2"></i>
+                    <span class="font-bold text-gradient">牢ICP</span>
+                    <span class="text-sm text-slate-500 ml-2">laozai-icp · 非官方个人网站联盟</span>
+                </div>
+                <div class="text-slate-500 text-sm">
+                    © 2026 牢ICP &nbsp;|&nbsp; <a href="#" class="hover:text-primary">牢ICP备20260000号-1</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 粒子背景
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                const size = Math.random() * 8 + 4;
+                const isBlue = Math.random() > 0.5;
+                p.className = `absolute rounded-full ${isBlue ? 'bg-primary/20' : 'bg-secondary/20'}`;
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                p.style.left = `${Math.random() * 100}%`;
+                p.style.top = `${Math.random() * 100}%`;
+                p.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
+                p.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // 随机跳转
+        document.getElementById('randomBtn').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/random');
+                const data = await res.json();
+                if (data.success && data.data) {
+                    window.open(data.data.url, '_blank');
+                } else {
+                    alert('暂无已通过审核的站点，请先提交申请~');
+                }
+            } catch (e) {
+                alert('网络错误，请稍后再试');
+            }
+        });
+
+        // 数字滚动动画
+        function animateCounter(el, target) {
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 30));
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = current;
+            }, 30);
+        }
+
+        // 加载统计数据
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/sites');
+                const data = await res.json();
+                if (data.success) {
+                    const sites = data.data;
+                    const approved = sites.filter(s => s.status === 'approved').length;
+                    const pending = sites.filter(s => s.status === 'pending').length;
+                    const totalVisits = sites.reduce((sum, s) => sum + (s.visits || 0), 0);
+                    const today = new Date().toISOString().split('T')[0];
+                    const todayNew = sites.filter(s => s.join_date === today).length;
+
+                    animateCounter(document.getElementById('approvedCount'), approved);
+                    animateCounter(document.getElementById('pendingCount'), pending);
+                    animateCounter(document.getElementById('visitsCount'), totalVisits);
+                    animateCounter(document.getElementById('todayCount'), todayNew);
+
+                    return sites;
+                }
+            } catch (e) {
+                console.error('加载统计失败', e);
+                return [];
+            }
+        }
+
+        // 默认图标库
+        const defaultIcons = ['🌐', '📝', '💻', '🎨', '📚', '🎮', '🔧', '✨', '🚀', '🌟', '💡', '🎯', '📷', '🎵', '🔬', '💾'];
+        function getIcon(site) {
+            if (site.icon && site.icon.trim()) {
+                return `<img src="${site.icon}" alt="${site.name}" class="w-14 h-14 rounded-xl object-cover" onerror="this.outerHTML='<div class=\\'w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-2xl\\'>${defaultIcons[Math.floor(Math.random() * defaultIcons.length)]}</div>'">`;
+            }
+            return `<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-2xl">${defaultIcons[site.id % defaultIcons.length]}</div>`;
+        }
+
+        // 加载站点列表
+        async function loadSites() {
+            const container = document.getElementById('sitesContainer');
+            try {
+                const res = await fetch('/api/sites');
+                const data = await res.json();
+                if (data.success) {
+                    let sites = data.data.filter(s => s.status === 'approved');
+                    // 随机取6个
+                    sites = sites.sort(() => Math.random() - 0.5).slice(0, 6);
+                    
+                    if (sites.length === 0) {
+                        container.innerHTML = `
+                            <div class="col-span-3 glass rounded-2xl p-12 text-center">
+                                <div class="text-6xl mb-4">🌟</div>
+                                <h3 class="text-xl font-bold mb-2">还没有已备案站点</h3>
+                                <p class="text-slate-500 mb-6">成为第一个加入牢ICP联盟的站长吧！</p>
+                                <a href="/apply.html" class="inline-block px-6 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-full">立即申请</a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = sites.map(site => `
+                        <a href="${site.url}" target="_blank" class="glass rounded-2xl p-6 card-shadow hover:-translate-y-2 transition-all group">
+                            <div class="flex items-start gap-4">
+                                ${getIcon(site)}
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="font-bold text-lg group-hover:text-primary transition-colors truncate">${site.name}</h3>
+                                    <p class="text-sm text-slate-500 mb-2 line-clamp-2">${site.description || '这个站长很懒，什么都没写~'}</p>
+                                    <div class="flex items-center gap-2 text-xs text-slate-400">
+                                        <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary">${site.category || '其他'}</span>
+                                        <span><i class="fa fa-eye mr-1"></i>${site.visits}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+
+                    // 加载排行榜
+                    const rankSites = data.data
+                        .filter(s => s.status === 'approved')
+                        .sort((a, b) => (b.visits || 0) - (a.visits || 0))
+                        .slice(0, 10);
+                    const rankContainer = document.getElementById('rankContainer');
+                    rankContainer.innerHTML = rankSites.map((site, index) => {
+                        let badgeClass = 'bg-slate-100 text-slate-500';
+                        if (index === 0) badgeClass = 'bg-gradient-to-r from-amber-200 to-amber-300 text-amber-800';
+                        if (index === 1) badgeClass = 'bg-gradient-to-r from-slate-200 to-slate-300 text-slate-700';
+                        if (index === 2) badgeClass = 'bg-gradient-to-r from-orange-200 to-orange-300 text-orange-800';
+                        return `
+                            <tr class="border-b border-primary/5 hover:bg-white/50 transition-colors">
+                                <td class="px-6 py-4"><span class="w-6 h-6 inline-flex items-center justify-center rounded-full ${badgeClass} text-xs font-bold">${index + 1}</span></td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        ${getIcon(site).replace('w-14 h-14', 'w-10 h-10').replace('text-2xl', 'text-lg')}
+                                        <div>
+                                            <a href="${site.url}" target="_blank" class="font-medium hover:text-primary transition-colors">${site.name}</a>
+                                            <div class="text-xs text-slate-400 truncate max-w-[200px]">${site.url}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600 hidden md:table-cell">${site.webmaster}</td>
+                                <td class="px-6 py-4 text-slate-500 text-xs hidden md:table-cell">${site.icp}</td>
+                                <td class="px-6 py-4"><span class="text-gradient font-bold">${site.visits}</span></td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="col-span-3 text-center py-8 text-red-400"><i class="fa fa-exclamation-circle mr-2"></i>加载站点失败</div>`;
+            }
+        }
+
+        // 换一批按钮
+        document.getElementById('refreshSitesBtn').addEventListener('click', () => {
+            loadSites();
+        });
+
+        // 导航滚动效果
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-md');
+            } else {
+                nav.classList.remove('shadow-md');
+            }
+        });
+
+        // 浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translateY(0) translateX(0); opacity: 0.3; }
+                50% { transform: translateY(-30px) translateX(20px); opacity: 0.7; }
+                100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化
+        loadStats();
+        loadSites();
+    </script>
+</body>
+</html>

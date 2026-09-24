@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告中心 - 牢ICP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#38bdf8', secondary: '#f472b6' } } } }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme { background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%); }
+            .text-gradient { background: linear-gradient(90deg, #38bdf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+            .card-shadow { box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15); }
+            .bg-grid { background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <a href="/" class="text-xl font-bold text-gradient">牢ICP</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-slate-600 hover:text-primary py-1">首页</a>
+                    <a href="/apply.html" class="text-slate-600 hover:text-primary py-1">申请备案</a>
+                    <a href="/query.html" class="text-slate-600 hover:text-primary py-1">备案查询</a>
+                    <a href="/announcement.html" class="text-primary font-medium py-1">公告中心</a>
+                    <a href="/jump.html" class="text-slate-600 hover:text-primary py-1">站点迁跃</a>
+                    <a href="/admin.html" class="text-slate-600 hover:text-secondary py-1"><i class="fa fa-cog mr-1"></i>管理</a>
+                </div>
+                <button id="menuBtn" class="md:hidden text-slate-700"><i class="fa fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden glass border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="block px-3 py-2 text-slate-600">首页</a>
+                <a href="/apply.html" class="block px-3 py-2 text-slate-600">申请备案</a>
+                <a href="/query.html" class="block px-3 py-2 text-slate-600">备案查询</a>
+                <a href="/announcement.html" class="block px-3 py-2 text-primary">公告中心</a>
+                <a href="/jump.html" class="block px-3 py-2 text-slate-600">站点迁跃</a>
+                <a href="/admin.html" class="block px-3 py-2 text-slate-600">管理后台</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gradient mb-3">公告中心</h1>
+            <p class="text-slate-600">牢ICP联盟的最新通知、规范更新和功能公告</p>
+        </div>
+
+        <div class="space-y-6">
+            <div class="glass rounded-2xl p-6 card-shadow hover:-translate-y-1 transition-all">
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">官方公告</span>
+                    <span class="text-xs text-slate-400">2026-09-24</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">牢ICP备案系统正式上线</h3>
+                <div class="text-slate-600 leading-relaxed">
+                    <p class="mb-2">亲爱的各位站长：</p>
+                    <p class="mb-2">牢ICP非官方个人网站联盟备案系统今天正式上线啦！我们致力于为个人站长提供一个友好的站点展示、友链交换、互相串门的平台，不限制技术栈、不强制广告，只要是合法合规的个人站点都可以申请加入。</p>
+                    <p>欢迎大家提交自己的博客/网站，我们会尽快审核，期待和大家一起建设温暖的个人网站生态！</p>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl p-6 card-shadow hover:-translate-y-1 transition-all">
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-medium">审核规范</span>
+                    <span class="text-xs text-slate-400">2026-09-24</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">备案审核标准说明</h3>
+                <div class="text-slate-600 leading-relaxed">
+                    <p class="mb-2">为了保证联盟站点质量，审核标准如下：</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>站点必须为个人性质，企业/商业营销站点暂不收录</li>
+                        <li>内容合法合规，无违反法律法规的内容</li>
+                        <li>站点可以正常访问，无恶意弹窗、病毒、跳转</li>
+                        <li>至少有3篇原创内容，不接受空壳站点</li>
+                        <li>审核周期一般为1-3个工作日，审核结果会通过邮箱通知</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glass rounded-2xl p-6 card-shadow hover:-translate-y-1 transition-all">
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">功能更新</span>
+                    <span class="text-xs text-slate-400">2026-09-24</span>
+                </div>
+                <h3 class="text-xl font-bold mb-3">管理后台上线，支持站点审核</h3>
+                <div class="text-slate-600 leading-relaxed">
+                    <p class="mb-2">本次更新内容：</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>新增管理员后台，支持查看所有提交的站点</li>
+                        <li>支持一键通过/拒绝/删除站点申请</li>
+                        <li>后台可查看站长邮箱等保密信息，前端不公开</li>
+                        <li>支持自定义网站图标直链，自动适配显示</li>
+                        <li>优化随机跳转功能，更稳定快速</li>
+                        <li>修复所有无效按钮，所有功能全部可用</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass border-t py-8 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            © 2026 牢ICP &nbsp;|&nbsp; 牢ICP备20260000号-1
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('hidden'));
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            const size = Math.random() * 6 + 3;
+            p.className = `absolute rounded-full ${Math.random() > 0.5 ? 'bg-primary/20' : 'bg-secondary/20'}`;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation:float ${Math.random()*10+10}s linear infinite;animation-delay:${Math.random()*5}s`;
+            document.getElementById('particles').appendChild(p);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes float {0%{transform:translateY(0) translateX(0);opacity:.3}50%{transform:translateY(-20px) translateX(10px);opacity:.6}100%{transform:translateY(0) translateX(0);opacity:.3}}`;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

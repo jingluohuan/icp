@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请备案 - 牢ICP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#38bdf8', secondary: '#f472b6' },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme { background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%); }
+            .text-gradient { background: linear-gradient(90deg, #38bdf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+            .card-shadow { box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15); }
+            .bg-grid { background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <a href="/" class="text-xl font-bold text-gradient">牢ICP</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-slate-600 hover:text-primary py-1">首页</a>
+                    <a href="/apply.html" class="text-primary font-medium py-1">申请备案</a>
+                    <a href="/query.html" class="text-slate-600 hover:text-primary py-1">备案查询</a>
+                    <a href="/announcement.html" class="text-slate-600 hover:text-primary py-1">公告中心</a>
+                    <a href="/jump.html" class="text-slate-600 hover:text-primary py-1">站点迁跃</a>
+                    <a href="/admin.html" class="text-slate-600 hover:text-secondary py-1"><i class="fa fa-cog mr-1"></i>管理</a>
+                </div>
+                <button id="menuBtn" class="md:hidden text-slate-700"><i class="fa fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden glass border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="block px-3 py-2 text-slate-600">首页</a>
+                <a href="/apply.html" class="block px-3 py-2 text-primary">申请备案</a>
+                <a href="/query.html" class="block px-3 py-2 text-slate-600">备案查询</a>
+                <a href="/announcement.html" class="block px-3 py-2 text-slate-600">公告中心</a>
+                <a href="/jump.html" class="block px-3 py-2 text-slate-600">站点迁跃</a>
+                <a href="/admin.html" class="block px-3 py-2 text-slate-600">管理后台</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gradient mb-3">申请加入牢ICP联盟</h1>
+            <p class="text-slate-600">填写以下信息提交申请，审核通过后你的站点将出现在联盟列表中</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div class="glass rounded-xl p-4 text-center card-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center mx-auto mb-2 font-bold">1</div>
+                <div class="text-sm">填写信息</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center card-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-secondary to-primary text-white flex items-center justify-center mx-auto mb-2 font-bold">2</div>
+                <div class="text-sm">提交申请</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center card-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary text-white flex items-center justify-center mx-auto mb-2 font-bold">3</div>
+                <div class="text-sm">等待审核</div>
+            </div>
+            <div class="glass rounded-xl p-4 text-center card-shadow">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-secondary to-primary text-white flex items-center justify-center mx-auto mb-2 font-bold">4</div>
+                <div class="text-sm">成功备案</div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8 card-shadow">
+            <form id="applyForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">网站名称 <span class="text-red-400">*</span></label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="例如：小明的博客">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">网站链接 <span class="text-red-400">*</span></label>
+                        <input type="url" name="url" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="https://www.example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">站长昵称 <span class="text-red-400">*</span></label>
+                        <input type="text" name="webmaster" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="你的昵称/ID">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">联系邮箱 <span class="text-red-400">*</span></label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="example@mail.com">
+                        <p class="text-xs text-slate-400 mt-1">邮箱仅用于审核通知，不会公开显示</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">网站分类</label>
+                        <select name="category" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all">
+                            <option value="博客">个人博客</option>
+                            <option value="技术">技术站点</option>
+                            <option value="设计">设计创意</option>
+                            <option value="生活">生活记录</option>
+                            <option value="工具">工具资源</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">网站图标地址</label>
+                        <input type="url" name="icon" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="https://你的域名/favicon.ico">
+                        <p class="text-xs text-slate-400 mt-1">填写图片直链，没有则留空自动分配emoji</p>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">RSS订阅地址（可选）</label>
+                    <input type="url" name="rss" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all" placeholder="https://你的域名/rss.xml">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">网站简介</label>
+                    <textarea name="description" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" placeholder="简单介绍一下你的网站吧~"></textarea>
+                </div>
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="agree" required class="mt-1 w-4 h-4 accent-primary">
+                    <label for="agree" class="text-sm text-slate-600">我承诺网站内容合法合规，无违法违规内容，遵守联盟规范</label>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <i class="fa fa-paper-plane mr-2"></i>提交申请
+                </button>
+            </form>
+
+            <div id="successCard" class="hidden text-center py-10">
+                <div class="w-20 h-20 rounded-full bg-green-100 text-green-500 flex items-center justify-center mx-auto mb-4 text-4xl">
+                    <i class="fa fa-check-circle"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">申请提交成功！</h3>
+                <p class="text-slate-600 mb-4">我们会尽快审核你的站点，审核通过后将展示在联盟列表中</p>
+                <div class="inline-block px-6 py-3 rounded-xl bg-gradient-to-r from-primary/10 to-secondary/10 mb-6">
+                    <div class="text-sm text-slate-500 mb-1">分配的备案号（审核通过后生效）</div>
+                    <div class="text-xl font-bold text-gradient" id="assignedIcp"></div>
+                </div>
+                <div>
+                    <a href="/" class="text-primary hover:text-secondary">返回首页 <i class="fa fa-arrow-right ml-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass border-t py-8 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            © 2026 牢ICP &nbsp;|&nbsp; 牢ICP备20260000号-1
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('hidden'));
+        
+        // 粒子
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            const size = Math.random() * 6 + 3;
+            p.className = `absolute rounded-full ${Math.random() > 0.5 ? 'bg-primary/20' : 'bg-secondary/20'}`;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation:float ${Math.random()*10+10}s linear infinite;animation-delay:${Math.random()*5}s`;
+            document.getElementById('particles').appendChild(p);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes float {0%{transform:translateY(0) translateX(0);opacity:.3}50%{transform:translateY(-20px) translateX(10px);opacity:.6}100%{transform:translateY(0) translateX(0);opacity:.3}}`;
+        document.head.appendChild(style);
+
+        document.getElementById('applyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>提交中...';
+            try {
+                const formData = new FormData(e.target);
+                const res = await fetch('/api/submit', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('applyForm').classList.add('hidden');
+                    document.getElementById('successCard').classList.remove('hidden');
+                    document.getElementById('assignedIcp').textContent = data.icp;
+                } else {
+                    alert(data.message || '提交失败，请稍后再试');
+                }
+            } catch (err) {
+                alert('网络错误，请稍后再试');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-paper-plane mr-2"></i>提交申请';
+            }
+        });
+    </script>
+</body>
+</html>

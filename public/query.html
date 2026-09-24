@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>备案查询 - 牢ICP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#38bdf8', secondary: '#f472b6' } } } }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme { background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%); }
+            .text-gradient { background: linear-gradient(90deg, #38bdf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+            .card-shadow { box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15); }
+            .bg-grid { background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <a href="/" class="text-xl font-bold text-gradient">牢ICP</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-slate-600 hover:text-primary py-1">首页</a>
+                    <a href="/apply.html" class="text-slate-600 hover:text-primary py-1">申请备案</a>
+                    <a href="/query.html" class="text-primary font-medium py-1">备案查询</a>
+                    <a href="/announcement.html" class="text-slate-600 hover:text-primary py-1">公告中心</a>
+                    <a href="/jump.html" class="text-slate-600 hover:text-primary py-1">站点迁跃</a>
+                    <a href="/admin.html" class="text-slate-600 hover:text-secondary py-1"><i class="fa fa-cog mr-1"></i>管理</a>
+                </div>
+                <button id="menuBtn" class="md:hidden text-slate-700"><i class="fa fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden glass border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="block px-3 py-2 text-slate-600">首页</a>
+                <a href="/apply.html" class="block px-3 py-2 text-slate-600">申请备案</a>
+                <a href="/query.html" class="block px-3 py-2 text-primary">备案查询</a>
+                <a href="/announcement.html" class="block px-3 py-2 text-slate-600">公告中心</a>
+                <a href="/jump.html" class="block px-3 py-2 text-slate-600">站点迁跃</a>
+                <a href="/admin.html" class="block px-3 py-2 text-slate-600">管理后台</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 max-w-3xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-gradient mb-3">备案信息查询</h1>
+            <p class="text-slate-600">输入域名或备案号，查询站点是否已通过牢ICP备案</p>
+        </div>
+
+        <div class="glass rounded-2xl p-8 card-shadow mb-8">
+            <div class="flex gap-4 mb-6">
+                <button id="tabDomain" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium">按域名查询</button>
+                <button id="tabIcp" class="flex-1 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 font-medium">按备案号查询</button>
+            </div>
+
+            <div class="flex gap-3">
+                <input type="text" id="queryInput" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 bg-white/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none" placeholder="请输入域名，例如 example.com">
+                <button id="queryBtn" class="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-medium hover:shadow-lg transition-all">
+                    <i class="fa fa-search mr-2"></i>查询
+                </button>
+            </div>
+        </div>
+
+        <!-- 查询结果 -->
+        <div id="resultContainer">
+            <div class="text-center py-16 text-slate-400">
+                <i class="fa fa-search text-5xl mb-4 opacity-50"></i>
+                <p>输入信息开始查询</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass border-t py-8 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            © 2026 牢ICP &nbsp;|&nbsp; 牢ICP备20260000号-1
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('hidden'));
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            const size = Math.random() * 6 + 3;
+            p.className = `absolute rounded-full ${Math.random() > 0.5 ? 'bg-primary/20' : 'bg-secondary/20'}`;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation:float ${Math.random()*10+10}s linear infinite;animation-delay:${Math.random()*5}s`;
+            document.getElementById('particles').appendChild(p);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes float {0%{transform:translateY(0) translateX(0);opacity:.3}50%{transform:translateY(-20px) translateX(10px);opacity:.6}100%{transform:translateY(0) translateX(0);opacity:.3}}`;
+        document.head.appendChild(style);
+
+        let queryType = 'domain';
+        const tabDomain = document.getElementById('tabDomain');
+        const tabIcp = document.getElementById('tabIcp');
+        const queryInput = document.getElementById('queryInput');
+
+        tabDomain.addEventListener('click', () => {
+            queryType = 'domain';
+            tabDomain.className = 'flex-1 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium';
+            tabIcp.className = 'flex-1 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 font-medium';
+            queryInput.placeholder = '请输入域名，例如 example.com';
+        });
+        tabIcp.addEventListener('click', () => {
+            queryType = 'icp';
+            tabIcp.className = 'flex-1 py-2 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-medium';
+            tabDomain.className = 'flex-1 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 font-medium';
+            queryInput.placeholder = '请输入备案号，例如 牢ICP备20260001号';
+        });
+
+        const defaultIcons = ['🌐', '📝', '💻', '🎨', '📚', '🚀', '✨', '🌟'];
+        document.getElementById('queryBtn').addEventListener('click', async () => {
+            const keyword = queryInput.value.trim();
+            if (!keyword) {
+                alert('请输入查询内容');
+                return;
+            }
+            const container = document.getElementById('resultContainer');
+            container.innerHTML = `<div class="text-center py-16 text-slate-400"><i class="fa fa-spinner fa-spin text-4xl mb-4"></i><p>查询中...</p></div>`;
+            try {
+                const url = `/api/query?${queryType}=${encodeURIComponent(keyword)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.success) {
+                    const site = data.data;
+                    const iconHtml = site.icon 
+                        ? `<img src="${site.icon}" class="w-16 h-16 rounded-xl object-cover" onerror="this.outerHTML='<div class=\\'w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl\\'>${defaultIcons[0]}</div>'">`
+                        : `<div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-3xl">${defaultIcons[site.id % defaultIcons.length]}</div>`;
+                    container.innerHTML = `
+                        <div class="glass rounded-2xl p-8 card-shadow">
+                            <div class="flex items-center gap-2 mb-6 text-green-500">
+                                <i class="fa fa-check-circle text-2xl"></i>
+                                <span class="text-lg font-medium">该站点已通过牢ICP备案</span>
+                            </div>
+                            <div class="flex flex-col md:flex-row gap-6 items-start">
+                                ${iconHtml}
+                                <div class="flex-1 w-full">
+                                    <h3 class="text-2xl font-bold mb-2">${site.name}</h3>
+                                    <p class="text-slate-600 mb-4">${site.description || '暂无简介'}</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                        <div><span class="text-slate-500">备案号：</span><span class="font-medium text-gradient" id="icpNum">${site.icp}</span> <button id="copyBtn" class="ml-2 text-primary hover:text-secondary text-xs"><i class="fa fa-copy"></i> 复制</button></div>
+                                        <div><span class="text-slate-500">网站地址：</span><a href="${site.url}" target="_blank" class="text-primary hover:underline">${site.url}</a></div>
+                                        <div><span class="text-slate-500">站长：</span>${site.webmaster}</div>
+                                        <div><span class="text-slate-500">分类：</span>${site.category}</div>
+                                        <div><span class="text-slate-500">加入日期：</span>${site.join_date}</div>
+                                        <div><span class="text-slate-500">访问量：</span>${site.visits}</div>
+                                    </div>
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="${site.url}" target="_blank" class="px-5 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:shadow-lg transition-all"><i class="fa fa-external-link mr-1"></i>访问网站</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('copyBtn').addEventListener('click', () => {
+                        navigator.clipboard.writeText(site.icp);
+                        const btn = document.getElementById('copyBtn');
+                        btn.innerHTML = '<i class="fa fa-check"></i> 已复制';
+                        setTimeout(() => btn.innerHTML = '<i class="fa fa-copy"></i> 复制', 2000);
+                    });
+                } else {
+                    container.innerHTML = `
+                        <div class="glass rounded-2xl p-8 text-center">
+                            <div class="text-red-400 text-5xl mb-4"><i class="fa fa-exclamation-circle"></i></div>
+                            <h3 class="text-xl font-bold mb-2">未查询到备案信息</h3>
+                            <p class="text-slate-600 mb-6">${data.message}</p>
+                            <button onclick="document.getElementById('queryInput').value='';document.getElementById('resultContainer').innerHTML='<div class=\\'text-center py-16 text-slate-400\\'><i class=\\'fa fa-search text-5xl mb-4 opacity-50\\'></i><p>输入信息开始查询</p></div>'" class="px-5 py-2 bg-white border border-primary text-primary rounded-lg hover:bg-primary/5 transition-all">
+                                <i class="fa fa-refresh mr-1"></i>再来一次
+                            </button>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="text-center py-16 text-red-400"><i class="fa fa-exclamation-circle text-4xl mb-4"></i><p>查询失败，请稍后再试</p></div>`;
+            }
+        });
+
+        queryInput.addEventListener('keydown', (e) => e.key === 'Enter' && document.getElementById('queryBtn').click());
+    </script>
+</body>
+</html>

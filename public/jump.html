@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>站点迁跃 - 牢ICP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#38bdf8', secondary: '#f472b6' } } } }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-theme { background: linear-gradient(135deg, #e0f2fe 0%, #fbcfe8 100%); }
+            .text-gradient { background: linear-gradient(90deg, #38bdf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
+            .card-shadow { box-shadow: 0 8px 32px rgba(56, 189, 248, 0.15); }
+            .bg-grid { background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-theme min-h-screen bg-grid text-slate-700">
+    <div id="particles" class="fixed inset-0 -z-10 overflow-hidden"></div>
+    <div class="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+    <div class="fixed bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
+
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fa fa-shield text-primary text-2xl mr-2"></i>
+                    <a href="/" class="text-xl font-bold text-gradient">牢ICP</a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="/" class="text-slate-600 hover:text-primary py-1">首页</a>
+                    <a href="/apply.html" class="text-slate-600 hover:text-primary py-1">申请备案</a>
+                    <a href="/query.html" class="text-slate-600 hover:text-primary py-1">备案查询</a>
+                    <a href="/announcement.html" class="text-slate-600 hover:text-primary py-1">公告中心</a>
+                    <a href="/jump.html" class="text-primary font-medium py-1">站点迁跃</a>
+                    <a href="/admin.html" class="text-slate-600 hover:text-secondary py-1"><i class="fa fa-cog mr-1"></i>管理</a>
+                </div>
+                <button id="menuBtn" class="md:hidden text-slate-700"><i class="fa fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden glass border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/" class="block px-3 py-2 text-slate-600">首页</a>
+                <a href="/apply.html" class="block px-3 py-2 text-slate-600">申请备案</a>
+                <a href="/query.html" class="block px-3 py-2 text-slate-600">备案查询</a>
+                <a href="/announcement.html" class="block px-3 py-2 text-slate-600">公告中心</a>
+                <a href="/jump.html" class="block px-3 py-2 text-primary">站点迁跃</a>
+                <a href="/admin.html" class="block px-3 py-2 text-slate-600">管理后台</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 max-w-7xl mx-auto px-4">
+        <!-- 随机跳转区 -->
+        <div class="glass rounded-3xl p-8 md:p-12 card-shadow text-center mb-12 relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-3xl md:text-4xl font-bold text-gradient mb-4">站点迁跃</h1>
+                <p class="text-slate-600 mb-8 max-w-2xl mx-auto">随机跳转到联盟内任意一个站点，发现更多有趣的个人网站~</p>
+                
+                <div id="jumpIdle">
+                    <button id="startJumpBtn" class="px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white rounded-full text-lg font-medium hover:shadow-lg hover:-translate-y-1 transition-all">
+                        <i class="fa fa-rocket mr-2"></i>开始迁跃
+                    </button>
+                </div>
+
+                <div id="jumpCountdown" class="hidden">
+                    <div class="text-6xl font-bold text-gradient mb-4" id="countdownNum">3</div>
+                    <p class="text-slate-600 mb-4">即将跳转到随机站点</p>
+                    <button id="cancelJumpBtn" class="px-6 py-2 bg-white border border-slate-200 text-slate-600 rounded-full hover:bg-slate-50 transition-all">
+                        取消跳转
+                    </button>
+                </div>
+            </div>
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- 全部站点 -->
+        <div>
+            <h2 class="text-2xl font-bold mb-6"><span class="text-gradient">全部已备案站点</span></h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="allSitesContainer">
+                <div class="col-span-full text-center py-8 text-slate-400">
+                    <i class="fa fa-spinner fa-spin mr-2"></i>加载中...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass border-t py-8 mt-10">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            © 2026 牢ICP &nbsp;|&nbsp; 牢ICP备20260000号-1
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('menuBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('hidden'));
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            const size = Math.random() * 6 + 3;
+            p.className = `absolute rounded-full ${Math.random() > 0.5 ? 'bg-primary/20' : 'bg-secondary/20'}`;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation:float ${Math.random()*10+10}s linear infinite;animation-delay:${Math.random()*5}s`;
+            document.getElementById('particles').appendChild(p);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes float {0%{transform:translateY(0) translateX(0);opacity:.3}50%{transform:translateY(-20px) translateX(10px);opacity:.6}100%{transform:translateY(0) translateX(0);opacity:.3}}`;
+        document.head.appendChild(style);
+
+        const defaultIcons = ['🌐', '📝', '💻', '🎨', '📚', '🎮', '🔧', '✨', '🚀', '🌟', '💡', '🎯', '📷', '🎵'];
+        let countdownTimer = null;
+        let targetUrl = '';
+
+        document.getElementById('startJumpBtn').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/random');
+                const data = await res.json();
+                if (data.success) {
+                    targetUrl = data.data.url;
+                    document.getElementById('jumpIdle').classList.add('hidden');
+                    document.getElementById('jumpCountdown').classList.remove('hidden');
+                    let count = 3;
+                    document.getElementById('countdownNum').textContent = count;
+                    countdownTimer = setInterval(() => {
+                        count--;
+                        document.getElementById('countdownNum').textContent = count;
+                        if (count === 0) {
+                            clearInterval(countdownTimer);
+                            window.open(targetUrl, '_blank');
+                            document.getElementById('jumpIdle').classList.remove('hidden');
+                            document.getElementById('jumpCountdown').classList.add('hidden');
+                        }
+                    }, 1000);
+                } else {
+                    alert('暂无已备案站点，请先提交申请~');
+                }
+            } catch (e) {
+                alert('网络错误，请稍后再试');
+            }
+        });
+
+        document.getElementById('cancelJumpBtn').addEventListener('click', () => {
+            clearInterval(countdownTimer);
+            document.getElementById('jumpIdle').classList.remove('hidden');
+            document.getElementById('jumpCountdown').classList.add('hidden');
+        });
+
+        // 加载所有站点
+        async function loadAllSites() {
+            const container = document.getElementById('allSitesContainer');
+            try {
+                const res = await fetch('/api/sites');
+                const data = await res.json();
+                if (data.success) {
+                    const sites = data.data.filter(s => s.status === 'approved').sort((a,b) => b.id - a.id);
+                    if (sites.length === 0) {
+                        container.innerHTML = `<div class="col-span-full text-center py-12"><div class="text-5xl mb-4">🌟</div><p class="text-slate-500 mb-4">还没有已备案站点，成为第一个吧！</p><a href="/apply.html" class="px-5 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-full">立即申请</a></div>`;
+                        return;
+                    }
+                    container.innerHTML = sites.map(site => {
+                        const iconHtml = site.icon 
+                            ? `<img src="${site.icon}" class="w-10 h-10 rounded-lg object-cover" onerror="this.outerHTML='<div class=\\'w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg\\'>${defaultIcons[site.id % defaultIcons.length]}</div>'">`
+                            : `<div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg">${defaultIcons[site.id % defaultIcons.length]}</div>`;
+                        return `
+                            <a href="${site.url}" target="_blank" class="glass rounded-xl p-4 hover:-translate-y-1 hover:shadow-md transition-all group">
+                                <div class="flex items-center gap-3">
+                                    ${iconHtml}
+                                    <div class="min-w-0 flex-1">
+                                        <div class="font-medium group-hover:text-primary transition-colors truncate">${site.name}</div>
+                                        <div class="text-xs text-slate-400 truncate">${site.webmaster}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                }
+            } catch (e) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-red-400">加载失败</div>`;
+            }
+        }
+
+        loadAllSites();
+    </script>
+</body>
+</html>
